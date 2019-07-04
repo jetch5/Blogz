@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Add a Blog Entry</h1>
+    <br>
+    <form method='post'>
+        <label>Title:
+            <br>
+            <input type="text" name='blog-title' value="{{blog_title}}">
+        </label>
+        <label>Blog Entry:
+            <input type="text" name='blog-text' value="{{blog_text}}">
+        </label>
+    </form>

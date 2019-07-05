@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+<nav>
+    <a href="/blog">Main Page</a>
+</nav>
+
 {% block content %}
 
     <h1>Add a Blog Entry</h1>
@@ -7,9 +11,17 @@
     <form method='post'>
         <label>Title:
             <br>
-            <input type="text" name='blog-title' value="{{blog_title}}">
+            <input type="text" name='blog-title' value="{{blog_title}}" required />
+            <span class = "error">{{title_error}}</span>
         </label>
+        <br>
+        <br>
         <label>Blog Entry:
-            <input type="text" name='blog-text' value="{{blog_text}}">
+            <br>
+            <input type="text" name='blog-text' value="{{blog_text}}" required />
+            <span class = "error">{{blog_error}}</span>
         </label>
+        <br>
+        <br>
+        <input type="submit" value="Add Entry" />
     </form>

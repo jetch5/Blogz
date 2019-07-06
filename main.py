@@ -18,9 +18,9 @@ class Blog(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('blog.html')
+    return redirect('/blog')
 
-@app.route('/blog', methods=['GET'])
+@app.route('/blog')
 def blog():
     blog_id = request.args.get('id')
     
@@ -29,14 +29,14 @@ def blog():
         return render_template('blog.html', posts=posts, title='Build-a-blog')
     else:
         post = Blog.query.get(blog_id)
-        return render_template('newpost.html', posts=posts title='New Entry')
+        return render_template('newpost.html', post=post, title='Blog Post')
 
 @app.route('/entry', methods=['POST', 'GET'])
 def new_post():
     
     if request.method == 'POST':
         blog_title = request.form['blog-title']
-        blog_body = request.form['blog-entry']
+        blog_body = request.form['blog-text']
         title_error = ''
         body_error = ''
 
@@ -49,12 +49,9 @@ def new_post():
             new_entry = Blog(blog_title, blog_body)
             db.session.add(new_entry)
             db.session.commit()
-            return render_template('newpost.htlm', /blog?id={}'.format(new_entry.id))
+            return render_template('newpost.html', blog_title=blog_title, body_body=blog_body)
         else:
             return render_template('entry.html', title='New Entry', title_error=title_error, body_error=body_error, blog_title=blog_title, blog_body=blog_body)
-    
-    return render_template('newpost.html', title='New Entry')
-
 
 if __name__ == "__main__":
     app.run()

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 
 <nav>
     <a href="/blog">Main Page</a>
@@ -8,17 +8,17 @@
 
     <h1>Add a Blog Entry</h1>
     <br>
-    <form method='post'>
+    <form method='post' action='/entryCheck'>
         <label>Title:
             <br>
-            <input type="text" name='blog-title' value="{{blog_title}}" required />
+            <input type="text" name='blog-title' value="{{blog_title}}" />
             <span class = "error">{{title_error}}</span>
         </label>
         <br>
         <br>
         <label>Blog Entry:
             <br>
-            <input type="text" name='blog-text' value="{{blog_text}}" required />
+            <input type="text" name='blog-body' value="{{blog_body}}" />
             <span class = "error">{{blog_error}}</span>
         </label>
         <br>

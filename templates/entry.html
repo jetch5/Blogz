@@ -1,9 +1,5 @@
 {% extends "index.html" %}
 
-<nav>
-    <a href="/blog">Main Page</a>
-</nav>
-
 {% block content %}
 
     <h1>Add a Blog Entry</h1>
@@ -18,7 +14,7 @@
         <br>
         <label>Blog Entry:
             <br>
-            <input type="text" name='blog-body' value="{{blog_body}}" />
+            <textarea type="text" name='blog-body' value="{{blog_body}}" maxlength="255" rows="10" cols="70"></textarea>
             <span class = "error">{{blog_error}}</span>
         </label>
         <br>

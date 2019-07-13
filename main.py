@@ -16,9 +16,9 @@ class Blog(db.Model):
         self.title = title
         self.body = body
 
-@app.route('/')
-def index():
-    return redirect('/blog')
+#@app.route('/')
+#def index():
+#    return redirect('/blog')
 
 @app.route('/blog', methods=['POST', 'GET'])
 def blog():
@@ -31,7 +31,7 @@ def blog():
         post = Blog.query.get(blog_id)
         return render_template('newpost.html', post=post, title='Blog Post')
 
-@app.route('/entry', methods=['POST', 'GET'])
+@app.route('/entry')
 def entry_form():
     return render_template('entry.html', title = "")
 
@@ -41,16 +41,13 @@ def new_post():
     blog_body = ""
     title_error = ""
     blog_error = ""
-
     if request.method == 'POST':
         blog_title = request.form['blog-title']
         blog_body = request.form['blog-body']
-
         if not blog_title:
             title_error = "Please enter a title"
         if not blog_body:
             blog_error = "Please enter a blog to post"
-
         if not blog_error and not title_error:
             new_post = Blog(blog_title, blog_body)
             db.session.add(new_post)
@@ -58,8 +55,6 @@ def new_post():
             return render_template('newpost.html', post = new_post, title='Blog Post')
         else:
             return render_template('entry.html', title='New Entry', title_error=title_error, blog_error=blog_error, blog_title=blog_title, blog_body=blog_body)
-
-    
 
 if __name__ == "__main__":
     app.run()

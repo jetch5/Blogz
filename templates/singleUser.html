@@ -4,14 +4,14 @@
 
     <h1>Blogz</h1>
 
-    {% if users|length == 0 %}
+    {% if posts|length == 0 %}
     <h3>No blog posts yet.</h3>
     {% else %}
 
-    {% for user in users %}
+    {% for post in posts %}
 
-    <a href="/blog?id={{user.id}}"><h2>{{user.username}}</h2></a>
-
+    <a href="/blog?id={{post.id}}"><h2>{{post.title}}</h2></a>
+    <p>{{post.body}}</p>
     
     {% endfor %}
     {% endif %}

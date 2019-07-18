@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{title}}</title>
+    </head>
+
+<body>
+    <nav>
+        <ul>
+            <li>
+                <a href="/login">login</a>
+            </li>
+            <li>
+                <a href="/logout">logout</a>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <a href="/">home</a>
+            </li>
+            <li>
+                <a href="/blog">all posts</a>
+            </li>
+            <li>
+                <a href="/newpost">make a new post</a>
+            </li>
+        </ul>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

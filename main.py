@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session, flash
+from flask import Flask, request, redirect, render_template, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -44,19 +44,25 @@ def require_login():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    blog_id = request.args.get('id')
+    username_error = ""
+    password_error = ""
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
+        
+        if User.query.filter_by(username=username).first() == None:
+            username_error = "Username is not correct"
+            return render_template('/login.html', username_error=username_error)
+        elif User.query.filter_by(password=password).first() != password:
+            password_error = "Password is incorrect"
+            return render_template('/login.html', password_error=password_error)
+        if not username_error and not password_error:
             session['username'] = username
-            flash('You are logged in' + username)
-            return redirect('/newpost.html')
-        else:
-            flash('User password incorrect or user does not exist')
-            return redirect('/login')
-
-    return render_template('login.html')
+            return redirect('/newpost.html', username=username)
+                    
+    return render_template('/login.html', username_error=username_error, password_error=password_error)
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -127,13 +133,19 @@ def allposts():
         post = Blog.query.filter_by(owner_id=blog_post).all()
         return render_template('allposts.html', blogs=post, title='Blog Post')
 
+@app.route('/base', methods=['GET'])
+def singlepost():
+    blog_post = request.args.get('id')
+    clicked_entry = Blog.query.filter_by(id=blog_post).first()
+    return render_template('base.html', clicked_entry=clicked_entry)
 
 @app.route('/newpost')
 def entry_form():
     return render_template('newpost.html', title = "")
 
-@app.route('/entryCheck', methods=['POST', 'GET'])
+@app.route('/newpost', methods=['POST', 'GET'])
 def new_post():
+    blog_id = request.args.get('id')
     blog_title = ""
     blog_body = ""
     title_error = ""

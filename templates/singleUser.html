@@ -2,18 +2,19 @@
 
 {% block content %}
 
-    <h1>Blogz</h1>
 
-    {% if posts|length == 0 %}
-    <h3>Thank you for posting in Blogz - here are all your posts</h3>
-    {% else %}
 
-    {% for post in posts %}
+    <h3>Thank you for posting in Blogz</h3>
+    <hr>
 
-    <a href="/blog?id={{post.id}}"><h2>{{post.title}}</h2></a>
-    <p>{{post.body}}</p>
+    <h2>{{post.title}}</h2></a>
     
-    {% endfor %}
-    {% endif %}
+    <h5>{{post.body}}</h5>
+
+    <h4>Written by <a href="/allposts?id={{post.owner.id}}">{{post.owner.username}}</a></h4>
+
+
+
+
 
 {% endblock %}

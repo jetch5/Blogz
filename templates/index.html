@@ -24,6 +24,15 @@
             <li>
                 <a href="/newpost">make a new post</a>
             </li>
+            <br>
+            <br>
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            <ul>
+            {% for category,message in messages %}
+                <li class="{{category}}">{{message}}</li>
+            {% endfor %}
+            </ul>
+            {% endwith %}
         </ul>
     </nav>
 

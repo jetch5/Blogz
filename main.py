@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session, url_for
+from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -40,29 +40,25 @@ def base():
 def require_login():
     allowed_routes = ['login', 'signup', 'index', 'blog']
     if request.endpoint not in allowed_routes and 'username' not in session:
-        return redirect('/signup')
+        return redirect('/login')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    blog_id = request.args.get('id')
-    username_error = ""
-    password_error = ""
-
-    if request.method == 'POST':
-        username = request.form['username']
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
         password = request.form['password']
-        
-        if User.query.filter_by(username=username).first() == None:
-            username_error = "Username is not correct"
-            return render_template('/login.html', username_error=username_error)
-        elif User.query.filter_by(password=password).first() != password:
-            password_error = "Password is incorrect"
-            return render_template('/login.html', password_error=password_error)
-        if not username_error and not password_error:
-            session['username'] = username
-            return redirect('/newpost.html', username=username)
-                    
-    return render_template('/login.html', username_error=username_error, password_error=password_error)
+        username = request.form['username']
+        users = User.query.filter_by(username=username)
+        if users.count() == 1:
+            user = users.first()
+            if password == user.password:
+                session['username'] = username
+                flash('Welcome back,' + user.username)
+                return redirect('/newpost')
+        flash('bad username or password')
+        return redirect('/login')
+
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -102,7 +98,7 @@ def signup():
             session['username'] = username
             return redirect('/newpost')
         else:
-            return render_template('signup.html', username_error=username_error, password_error= password_error, verify_error=verify_error)
+            return render_template('signup.html', username=username, username_error=username_error, password_error= password_error, verify_error=verify_error)
             
     return render_template('signup.html')
 
@@ -135,9 +131,13 @@ def allposts():
 
 @app.route('/base', methods=['GET'])
 def singlepost():
-    blog_post = request.args.get('id')
-    clicked_entry = Blog.query.filter_by(id=blog_post).first()
-    return render_template('base.html', clicked_entry=clicked_entry)
+    blog_user = request.args.get('id')
+
+    if blog_user == None:
+        return redirect('/blog')
+    else:
+        blog = Blog.query.filter_by(id=blog_user).all()
+        return render_template('base.html', blog=blog)
 
 @app.route('/newpost')
 def entry_form():
@@ -163,7 +163,7 @@ def new_post():
             new_post = Blog(blog_title, blog_body, owner_id)
             db.session.add(new_post)
             db.session.commit()
-            return render_template('singleUser.html', post = new_post, title='Blog Post')
+            return render_template('singleUser.html', post=new_post)
         else:
             return render_template('newpost.html', title='New Entry', title_error=title_error, blog_error=blog_error, blog_title=blog_title, blog_body=blog_body)
 
